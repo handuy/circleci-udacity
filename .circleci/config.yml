@@ -20,7 +20,14 @@ jobs:
       - checkout
       - run:
           name: print hello
-          command: echo "Hello"
+          command: echo "Hello" >>  /tmp/test.txt
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: /tmp
+          # Must be relative path from root
+          paths:
+            - test.txt
           
   # Below is the definition of your job to test your Node app. You can rename and customize it as you want.
   print_world:
@@ -33,10 +40,12 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       # Checkout the code as the first step.
-      - checkout
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /tmp
       - run:
-          name: print world
-          command: echo $TEST_UDACITY
+          name: echo file
+          command: cat /tmp/test.txt
 
 workflows:
   # Name the workflow "welcome"
