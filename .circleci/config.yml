@@ -11,7 +11,7 @@ commands:
       - run: echo $CIRCLE_WORKFLOW_ID >> /tmp/test.txt
 jobs:
   # Below is the definition of your job to test your Node app. You can rename and customize it as you want.
-  print_hello:
+  failed_job:
     # These next lines define a docker executor: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # A list of available CircleCI docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
@@ -21,18 +21,12 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       # Checkout the code as the first step.
-      - checkout
-      - print_pipeline_id
-      - persist_to_workspace:
-          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
-          # taken to be the root directory of the workspace.
-          root: /tmp
-          # Must be relative path from root
-          paths:
-            - test.txt
+      - run:
+          name: return error
+          command: return 1
           
   # Below is the definition of your job to test your Node app. You can rename and customize it as you want.
-  print_world:
+  run_when_fail:
     # These next lines define a docker executor: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # A list of available CircleCI docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
@@ -42,19 +36,17 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       # Checkout the code as the first step.
-      - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: /tmp
       - run:
           name: echo file
           command: cat /tmp/test.txt
+          when: on_fail
 
 workflows:
   # Name the workflow "welcome"
   welcome:
     # Run the welcome/run job in its own container
     jobs:
-      - print_hello
-      - print_world:
+      - failed_job
+      - run_when_fail:
           requires:
-              - print_hello
+              - failed_job
