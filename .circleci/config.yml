@@ -5,6 +5,10 @@ orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.4.1
 # Orchestrate or schedule a set of jobs
+commands:
+  print_pipeline_id:
+    steps:
+      - run: echo $CIRCLE_WORKFLOW_ID >> /tmp/test.txt
 jobs:
   # Below is the definition of your job to test your Node app. You can rename and customize it as you want.
   print_hello:
@@ -18,9 +22,7 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
-      - run:
-          name: print hello
-          command: echo "Hello" >>  /tmp/test.txt
+      - print_pipeline_id
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
           # taken to be the root directory of the workspace.
