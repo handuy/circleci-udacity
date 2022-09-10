@@ -19,11 +19,15 @@ jobs:
       # Checkout the code as the first step.
       - run:
           name: return error
-          command: return 1
+          command: echo "123"
       - run:
-          name: echo file
+          name: fail
           command: echo "run when fail"
           when: on_fail
+      - run:
+          name: success
+          command: echo "run when success"
+          when: on_success
           
   # Below is the definition of your job to test your Node app. You can rename and customize it as you want.
   run_when_fail:
