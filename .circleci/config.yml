@@ -38,7 +38,7 @@ jobs:
       # Checkout the code as the first step.
       - run:
           name: echo file
-          command: cat /tmp/test.txt
+          command: echo "run when fail"
           when: on_fail
 
 workflows:
