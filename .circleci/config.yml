@@ -5,10 +5,6 @@ orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.4.1
 # Orchestrate or schedule a set of jobs
-commands:
-  print_pipeline_id:
-    steps:
-      - run: echo $CIRCLE_WORKFLOW_ID >> /tmp/test.txt
 jobs:
   # Below is the definition of your job to test your Node app. You can rename and customize it as you want.
   failed_job:
@@ -24,6 +20,10 @@ jobs:
       - run:
           name: return error
           command: return 1
+      - run:
+          name: echo file
+          command: echo "run when fail"
+          when: on_fail
           
   # Below is the definition of your job to test your Node app. You can rename and customize it as you want.
   run_when_fail:
